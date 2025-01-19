@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NATO Translator</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 20px;
+            background-color: #f7f7f7;
+            color: #333;
+        }
+
+        h1 {
+          text-align: center;
+          margin-bottom: 30px;
+          color: #555; /* Dark gray color */
+          font-weight: bold;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        textarea {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 16px;
+            resize: vertical;
+            line-height: 1.5;
+            transition: border-color 0.3s ease;
+             height: 150px;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+
+        .output-container {
+          margin-top: 10px; /* Reduced top margin since the label is removed */
+          padding: 10px;
+          background-color: #eef7ff;
+          border: 1px solid #b0cfee;
+          border-radius: 4px;
+          font-size: 16px;
+          font-family: monospace;
+          line-height: 1.6;
+          overflow-x: auto;
+          white-space: pre-wrap;
+        }
+
+       
+    </style>
+ </head>
+ <body>
+    <div class="container">
+        <h1>NATO Alphabet Translator</h1>
+        <textarea id="input" placeholder="Enter text here..."></textarea>
+
+        <div class="output-container" id="output"></div>
+    </div>
+
+    <script>
+        const inputTextArea = document.getElementById('input');
+        const outputDiv = document.getElementById('output');
+        const natoAlphabet = {
+            'a': 'Alfa', 'b': 'Bravo', 'c': 'Charlie', 'd': 'Delta', 'e': 'Echo',
+            'f': 'Foxtrot', 'g': 'Golf', 'h': 'Hotel', 'i': 'India', 'j': 'Juliett',
+            'k': 'Kilo', 'l': 'Lima', 'm': 'Mike', 'n': 'November', 'o': 'Oscar',
+            'p': 'Papa', 'q': 'Quebec', 'r': 'Romeo', 's': 'Sierra', 't': 'Tango',
+            'u': 'Uniform', 'v': 'Victor', 'w': 'Whiskey', 'x': 'Xray', 'y': 'Yankee',
+            'z': 'Zulu',
+            '0': 'Zero', '1': 'One', '2': 'Two', '3': 'Three', '4': 'Four', 
+            '5': 'Five', '6': 'Six', '7': 'Seven', '8': 'Eight', '9': 'Nine',
+             ' ': ' '
+        };
+
+       function translateToNATO(text) {
+            let translatedText = '';
+            text = text.toLowerCase();
+            for (let i = 0; i < text.length; i++) {
+                const char = text[i];
+
+                if (char === '\n') {
+                  translatedText += char;
+                } else if (char === ' ') {
+                     translatedText += ' | ';
+                }
+                else if (natoAlphabet.hasOwnProperty(char)) {
+                    translatedText += natoAlphabet[char] + ' ';
+                }
+                 else {
+                    translatedText += char + ' ';
+                }
+            }
+             return translatedText.trim();
+        }
+
+        function handleInput() {
+            const inputText = inputTextArea.value;
+            const translated = translateToNATO(inputText);
+            outputDiv.textContent = translated;
+        }
+
+        if (inputTextArea.addEventListener) {
+            inputTextArea.addEventListener('input', handleInput, false);
+          } else if (inputTextArea.attachEvent) {
+            inputTextArea.attachEvent('oninput', handleInput);
+          }
+    </script>
+ </body>
+</html>
