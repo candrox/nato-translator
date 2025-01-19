@@ -97,8 +97,7 @@
                 if (char === '\n') {
                   translatedText += char;
                 } else if (char === ' ') {
-                    translatedText += ' [SPACE] '; // Use [SPACE] instead of  |
-                     
+                    translatedText += ' [SPACE] ';
                 }
                 else if (natoAlphabet.hasOwnProperty(char)) {
                     translatedText += natoAlphabet[char];
@@ -122,11 +121,13 @@
             outputDiv.textContent = translated;
         }
 
-         if (inputTextArea.addEventListener) {
+        if (inputTextArea.addEventListener) {
             inputTextArea.addEventListener('input', handleInput, false);
           } else if (inputTextArea.attachEvent) {
             inputTextArea.attachEvent('oninput', handleInput);
           }
+
+        inputTextArea.focus();
     </script>
 </body>
 </html>
