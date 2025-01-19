@@ -38,7 +38,7 @@
             resize: vertical;
             line-height: 1.5;
             transition: border-color 0.3s ease;
-             height: 150px;
+            height: 150px;
         }
 
         textarea:focus {
@@ -58,8 +58,8 @@
             line-height: 1.6;
             overflow-x: auto;
             white-space: pre-wrap;
-            width: calc(100% - 22px); /* Match input field width */
-             box-sizing: border-box; /* crucial for correct width calculation */
+            width: calc(100% - 22px);
+            box-sizing: border-box;
         }
 
     </style>
@@ -84,7 +84,7 @@
             'z': 'Zulu',
             '0': 'Zero', '1': 'One', '2': 'Two', '3': 'Three', '4': 'Four',
             '5': 'Five', '6': 'Six', '7': 'Seven', '8': 'Eight', '9': 'Nine',
-             ' ': ' '
+            ' ': ' '
         };
 
 
@@ -97,13 +97,20 @@
                 if (char === '\n') {
                   translatedText += char;
                 } else if (char === ' ') {
-                     translatedText += ' | ';
+                    translatedText += ' [SPACE] '; // Use [SPACE] instead of  |
+                     
                 }
                 else if (natoAlphabet.hasOwnProperty(char)) {
-                    translatedText += natoAlphabet[char] + ' ';
+                    translatedText += natoAlphabet[char];
+                      if(i < text.length-1 && text[i+1] !== ' '){
+                         translatedText += ' '
+                    }
                 }
                  else {
-                    translatedText += char + ' ';
+                      translatedText += char;
+                     if(i < text.length-1 && text[i+1] !== ' '){
+                         translatedText += ' '
+                    }
                 }
             }
              return translatedText.trim();
@@ -115,7 +122,7 @@
             outputDiv.textContent = translated;
         }
 
-        if (inputTextArea.addEventListener) {
+         if (inputTextArea.addEventListener) {
             inputTextArea.addEventListener('input', handleInput, false);
           } else if (inputTextArea.attachEvent) {
             inputTextArea.attachEvent('oninput', handleInput);
