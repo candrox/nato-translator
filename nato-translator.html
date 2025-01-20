@@ -39,12 +39,12 @@
             line-height: 1.5;
             transition: border-color 0.3s ease;
             height: 150px;
-        }
+         }
 
         textarea:focus {
-            outline: none;
-            border-color: #007bff;
-            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+           outline: none;
+            border-color: #b0cfee;
+            box-shadow: 0 0 0 0.2rem rgba(176, 207, 238, 0.25);
         }
 
         .output-container {
@@ -61,7 +61,59 @@
             width: calc(100% - 22px);
             box-sizing: border-box;
         }
+        .space-char {
+             color: #b0cfee;
+         }
+        .controls {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+          }
+        .controls button, .controls .font-size-control {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+             display: inline-flex;
+            align-items: center;
+            color: #555;
+        }
+       .controls button:hover, .controls .font-size-control:hover {
+           background-color: #f0f0f0;
+       }
 
+        .controls input[type="range"] {
+           width: 100px;
+           appearance: none;
+            height: 8px;
+           background: #ddd;
+            border-radius: 5px;
+            outline: none;
+            cursor: pointer;
+            margin: 0 0 0 5px;
+        }
+        .controls input[type="range"]::-webkit-slider-thumb {
+             -webkit-appearance: none;
+             appearance: none;
+            width: 15px;
+           height: 15px;
+            background: #555;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        .controls label {
+            white-space: nowrap;
+           font-size: 14px;
+            font-weight: normal;
+           margin: 0;
+        }
+       .font-size-control {
+           display: inline-flex;
+           align-items: center;
+       }
     </style>
 </head>
 <body>
@@ -69,11 +121,22 @@
         <h1>NATO Translator</h1>
         <textarea id="input" placeholder="Enter text here..."></textarea>
         <div class="output-container" id="output"></div>
+        <div class="controls">
+            <button id="copyButton">Copy Text</button>
+            <button id="downloadButton">Download Text</button>
+           <div class="font-size-control">
+            <label for="fontSizeSlider">Text Size</label>
+            <input type="range" id="fontSizeSlider" min="10" max="30" value="16">
+            </div>
+        </div>
     </div>
 
     <script>
         const inputTextArea = document.getElementById('input');
         const outputDiv = document.getElementById('output');
+        const copyButton = document.getElementById('copyButton');
+        const downloadButton = document.getElementById('downloadButton');
+        const fontSizeSlider = document.getElementById('fontSizeSlider');
 
         const natoAlphabet = {
             'a': 'Alfa', 'b': 'Bravo', 'c': 'Charlie', 'd': 'Delta', 'e': 'Echo',
@@ -82,7 +145,7 @@
             'p': 'Papa', 'q': 'Quebec', 'r': 'Romeo', 's': 'Sierra', 't': 'Tango',
             'u': 'Uniform', 'v': 'Victor', 'w': 'Whiskey', 'x': 'Xray', 'y': 'Yankee',
             'z': 'Zulu',
-            '0': 'Zero', '1': 'One', '2': 'Two', '3': 'Three', '4': 'Four',
+             '0': 'Zero', '1': 'One', '2': 'Two', '3': 'Three', '4': 'Four',
             '5': 'Five', '6': 'Six', '7': 'Seven', '8': 'Eight', '9': 'Nine',
             ' ': ' '
         };
@@ -91,34 +154,69 @@
        function translateToNATO(text) {
             let translatedText = '';
             text = text.toLowerCase();
+            let previousChar = '\n';
             for (let i = 0; i < text.length; i++) {
                 const char = text[i];
 
                 if (char === '\n') {
                   translatedText += char;
+                   previousChar = '\n';
                 } else if (char === ' ') {
-                    translatedText += ' [SPACE] ';
+                     translatedText += (previousChar === '\n' ? '' : ' ') + '<span class="space-char">•</span> ';
+                     previousChar = ' ';
                 }
                 else if (natoAlphabet.hasOwnProperty(char)) {
-                    translatedText += natoAlphabet[char];
+                    const natoWord = natoAlphabet[char];
+                    translatedText += `<b>${natoWord.charAt(0)}</b>${natoWord.slice(1)}`;
                       if(i < text.length-1 && text[i+1] !== ' '){
-                         translatedText += ' '
-                    }
+                         translatedText += ' ';
+                     }
+                    previousChar = 'word';
                 }
                  else {
-                      translatedText += char;
-                     if(i < text.length-1 && text[i+1] !== ' '){
-                         translatedText += ' '
-                    }
+                     translatedText += char;
+                      if(i < text.length-1 && text[i+1] !== ' '){
+                         translatedText += ' ';
+                     }
+                    previousChar = 'char';
                 }
             }
              return translatedText.trim();
         }
 
         function handleInput() {
-            const inputText = inputTextArea.value;
-            const translated = translateToNATO(inputText);
-            outputDiv.textContent = translated;
+             const inputText = inputTextArea.value;
+             const translated = translateToNATO(inputText);
+             outputDiv.innerHTML = translated;
+        }
+
+
+         function copyToClipboard() {
+            const textToCopy = outputDiv.textContent;
+            navigator.clipboard.writeText(textToCopy)
+                 .then(() => {
+                   console.log('Text copied to clipboard');
+                 })
+                .catch(err => {
+                     console.error('Error copying text: ', err);
+                });
+        }
+
+         function downloadText() {
+            const textToDownload = outputDiv.textContent;
+             const blob = new Blob([textToDownload], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+             a.download = 'nato_translation.txt';
+            document.body.appendChild(a);
+            a.click();
+             document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function updateFontSize() {
+            outputDiv.style.fontSize = `${fontSizeSlider.value}px`;
         }
 
         if (inputTextArea.addEventListener) {
@@ -126,8 +224,10 @@
           } else if (inputTextArea.attachEvent) {
             inputTextArea.attachEvent('oninput', handleInput);
           }
-
         inputTextArea.focus();
+       copyButton.addEventListener('click', copyToClipboard);
+        downloadButton.addEventListener('click', downloadText);
+        fontSizeSlider.addEventListener('input', updateFontSize);
     </script>
 </body>
 </html>
