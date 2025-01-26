@@ -1,5 +1,5 @@
 # nato-translator
-This project translates English letters and sentences into NATO/ICAO phonetics.
+This project translates English letters and sentences into NATO/ICAO phonetics. Runs locally and offline in a browser.
 * [NATO Phonetic Alphabet](https://en.wikipedia.org/wiki/NATO_phonetic_alphabet)
 * [ICAO Phonetic Alphabet](https://www.icao.int/pages/alphabetradiotelephony.aspx)
 
