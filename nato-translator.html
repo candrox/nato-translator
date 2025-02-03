@@ -70,7 +70,7 @@
             gap: 10px;
             align-items: center;
           }
-        .controls button, .controls .font-size-control {
+        .controls button, .controls .font-size-control, .controls .color-control {
             padding: 8px 12px;
             border: 1px solid #ddd;
             border-radius: 4px;
@@ -81,7 +81,7 @@
             align-items: center;
             color: #555;
         }
-       .controls button:hover, .controls .font-size-control:hover {
+       .controls button:hover, .controls .font-size-control:hover, .controls .color-control:hover {
            background-color: #f0f0f0;
        }
 
@@ -114,6 +114,23 @@
            display: inline-flex;
            align-items: center;
        }
+      .color-control {
+            display: inline-flex;
+            align-items: center;
+       }
+        .color-dot {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            margin-left: 5px;
+            cursor: pointer;
+            display: inline-block;
+        }
+         .color-dot.red { background-color: red; }
+        .color-dot.blue { background-color: blue; }
+        .color-dot.green { background-color: green; }
+        .color-dot.black { background-color: black; }
+        .color-dot.purple { background-color: purple; }
     </style>
 </head>
 <body>
@@ -128,6 +145,15 @@
             <label for="fontSizeSlider">Text Size</label>
             <input type="range" id="fontSizeSlider" min="10" max="30" value="16">
             </div>
+          <div class="color-control">
+                <label>Text Color</label>
+                <span class="color-dot black" data-color="black"></span>
+                <span class="color-dot purple" data-color="purple"></span>
+              <span class="color-dot red" data-color="red"></span>
+               <span class="color-dot green" data-color="green"></span>
+               <span class="color-dot blue" data-color="blue"></span>
+
+           </div>
         </div>
     </div>
 
@@ -137,6 +163,8 @@
         const copyButton = document.getElementById('copyButton');
         const downloadButton = document.getElementById('downloadButton');
         const fontSizeSlider = document.getElementById('fontSizeSlider');
+         const colorDots = document.querySelectorAll('.color-dot');
+
 
         const natoAlphabet = {
             'a': 'Alfa', 'b': 'Bravo', 'c': 'Charlie', 'd': 'Delta', 'e': 'Echo',
@@ -219,6 +247,10 @@
             outputDiv.style.fontSize = `${fontSizeSlider.value}px`;
         }
 
+        function updateTextColor(color) {
+           outputDiv.style.color = color;
+        }
+
         if (inputTextArea.addEventListener) {
             inputTextArea.addEventListener('input', handleInput, false);
           } else if (inputTextArea.attachEvent) {
@@ -228,6 +260,12 @@
        copyButton.addEventListener('click', copyToClipboard);
         downloadButton.addEventListener('click', downloadText);
         fontSizeSlider.addEventListener('input', updateFontSize);
+        colorDots.forEach(dot => {
+            dot.addEventListener('click', function() {
+                 const color = this.getAttribute('data-color');
+                updateTextColor(color);
+            });
+        });
     </script>
 </body>
 </html>
